@@ -21,24 +21,25 @@ function onDeleteClick(event) {
 function addItemToList(value) {
   // create new list item
   const li = document.createElement("li");
-  const span = document.createElement("span");
-  span.textContent = value;
+  const outerSpan = document.createElement("span");
+  const innerSpan = document.createElement("span");
+  innerSpan.textContent = value;
 
   // create checkbox
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
+  checkbox.onchange = onItemChecked;
 
   // create delete button
   const button = document.createElement("button");
   button.textContent = "delete";
-  button.onclick = function () {
-    li.remove();
-  };
+  button.onclick = onDeleteClick;
 
   // append elements to list item
-  span.appendChild(checkbox);
-  span.appendChild(button);
-  li.appendChild(span);
+  outerSpan.appendChild(innerSpan);
+  outerSpan.appendChild(checkbox);
+  outerSpan.appendChild(button);
+  li.appendChild(outerSpan);
 
   // append list item to the list
   const ul = document.querySelector("ul");
