@@ -4,19 +4,96 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>JS-TodoList Exercise</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+            }
+            h1, h2 {
+                color: #333;
+            }
+            form {
+                margin-bottom: 20px;
+            }
+            input[type="text"] {
+                padding: 5px;
+                width: 200px;
+            }
+            button {
+                padding: 5px 10px;
+                margin-left: 5px;
+            }
+            ul {
+                list-style-type: none;
+                padding: 0;
+            }
+            li {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 5px;
+                border-bottom: 1px solid #ccc;
+            }
+            li:hover {
+                background-color: #f0f0f0;
+            li span {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            li input[type="checkbox"]:checked + button {
+                text-decoration: line-through;
+            }
+            li input[type="checkbox"] {
+                margin-right: 10px;
+            }
+            li button {
+                background-color: #f44336;  /* Red */  
+            }
+            li button:hover {
+                background-color: #d32f2f;  /* Darker Red */
+                color: white;
+            }    
+            li {
+                margin: 5px 0;
+                text-decoration: line-through;
+            }
+        </style>
         <script src="index.js"></script>
     </head>
     <body>
         <h1>Awesome JS-TodoList</h1>
-        <span>
-            <input placeholder="Add new item..."/>
-            <button>Add</button>
-        </span>
-        
+
+        <form>
+            <label for="input-item">Add new item:</label>
+            <input id="input-item" placeholder="Add new item..."/>
+            <button type="button" onclick="onAddClick()">Add</button>
+        </form>
+
+        <h2>Todo List</h2>
         <ul>
-            <li><span>item 1 <input type="checkbox"/> <button>delete</button></span></li>
-            <li><span>item 2 <input type="checkbox"/> <button>delete</button></span></li>
-            <li><span>item 3 <input type="checkbox"/> <button>delete</button></span></li>
+            <li>
+                <span>
+                    item 1 
+                    <input type="checkbox"/> 
+                    <button onclick="onDeleteClick(event)">delete</button>
+                </span>
+            </li>
+            <li>
+                <span>
+                    item 2 
+                    <input type="checkbox"/> 
+                    <button onclick="onDeleteClick(event)">delete</button>
+                </span>
+            </li>
+            <li>
+                <span>
+                    item 3
+                    <input type="checkbox"/> 
+                    <button onclick="onDeleteClick(event)">delete</button>
+                </span>
+            </li>
+            
         </ul>
     </body>
 </html>
