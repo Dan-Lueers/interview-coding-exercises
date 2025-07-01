@@ -44,3 +44,17 @@ function addItemToList(value) {
   const ul = document.querySelector("ul");
   ul.appendChild(li);
 }
+
+function onItemChecked(event) {
+  // get the checkbox
+  const checkbox = event.target;
+  // get the parent list item
+  const span = checkbox.previousElementSibling;
+
+  // toggle strike-through style
+  if (checkbox.checked) {
+    span.style.textDecoration = "line-through";
+  } else {
+    span.style.textDecoration = "none";
+  }
+}
