@@ -30,6 +30,18 @@ app.post("/tasks", (req, res) => {
   res.status(201).send({ message: "Task added successfully", jsonData });
 });
 
+app.delete("/tasks/:task", (req, res) => {
+  const taskToDelete = req.params.task;
+  console.log("taskToDelete:", taskToDelete); // Log the task to be deleted
+  const index = tasks.indexOf(taskToDelete);
+  if (index > -1) {
+    tasks.splice(index, 1); // Remove the task from the array
+    res.status(200).send({ message: "Task deleted successfully" });
+  } else {
+    res.status(404).send({ message: "Task not found" });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });

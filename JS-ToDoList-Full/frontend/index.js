@@ -24,7 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   todoList.addEventListener("click", (event) => {
     if (event.target.tagName === "BUTTON") {
-      onDeleteClick(event);
+      const taskText = getClosestSpanSibling(event.target);
+      deleteTaskFromServer(taskText, event);
     } else if (
       event.target.tagName === "INPUT" &&
       event.target.type === "checkbox"
@@ -49,6 +50,25 @@ function addServerTasksToList(tasks) {
   tasks.forEach((task) => {
     addItemToList(task);
   });
+}
+
+function getClosestSpanSibling(element) {
+  // Find the closest span element that contains the task text
+  const taskSpan = element.closest("span").querySelector("span");
+
+  // Get the text content of the task span
+  const taskText = taskSpan.textContent;
+  return taskText;
+}
+
+// Example usage:
+const someElement = document.getElementById("myElement");
+const closestSpan = getClosestSpanSibling(someElement);
+
+if (closestSpan) {
+  console.log("Closest span sibling:", closestSpan);
+} else {
+  console.log("No span sibling found.");
 }
 
 function addItemToList(value) {
@@ -112,6 +132,22 @@ async function getTasksFromServer() {
   let tasks = await response.json();
   console.log("Tasks fetched from server:", tasks);
   return tasks;
+}
+
+async function deleteTaskFromServer(task, event) {
+  // This function can be used to delete a task from a backend server
+  const response = await fetch(`${baseURL}/tasks/${task}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    console.error("Failed to delete task:", response.statusText);
+    return;
+  }
+  onDeleteClick(event); // Remove the task from the UI
 }
 
 function onDeleteClick(event) {
