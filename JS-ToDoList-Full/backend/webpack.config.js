@@ -4,29 +4,31 @@ const nodeExternals = require("webpack-node-externals");
 
 module.exports = {
   mode: "development",
-  entry: "./index.js",
+  entry: "./index.ts",
   target: "node",
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
     publicPath: "/dist/",
   },
+  resolve: {
+    extensions: [".ts", ".js"],
+  },
   externals: [nodeExternals()],
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.ts$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env"],
-          },
-        },
+        use: "ts-loader",
       },
     ],
   },
-  watch: true,
+  devtool: "source-map",
+  devServer: {
+    static: "./dist",
+    hot: true,
+  },
 };
 // This configuration file sets up Webpack to bundle a Node.js application.
 // It specifies the entry point, output directory, and filename for the bundled code.

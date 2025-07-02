@@ -61,16 +61,6 @@ function getClosestSpanSibling(element) {
   return taskText;
 }
 
-// Example usage:
-const someElement = document.getElementById("myElement");
-const closestSpan = getClosestSpanSibling(someElement);
-
-if (closestSpan) {
-  console.log("Closest span sibling:", closestSpan);
-} else {
-  console.log("No span sibling found.");
-}
-
 function addItemToList(value) {
   const li = document.createElement("li");
   const outerSpan = document.createElement("span");

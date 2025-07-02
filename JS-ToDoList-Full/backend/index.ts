@@ -3,7 +3,13 @@ const cors = require("cors"); // Import CORS middleware
 const app = express();
 const port = 3000;
 
-const tasks = [];
+const tasks: Task[] = [];
+
+type Task = {
+  name: string;
+  done: boolean;
+  id: number;
+};
 
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Middleware to parse JSON bodies

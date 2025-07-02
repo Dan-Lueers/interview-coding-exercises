@@ -1,23 +1,6 @@
-/*
- * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
- * This devtool is neither made for production nor for readable output files.
- * It uses "eval()" calls to create a separate source file in the browser devtools.
- * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
- * or disable the default devtool with "devtool: false".
- * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
- */
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
-
-/***/ "./index.js":
-/*!******************!*\
-  !*** ./index.js ***!
-  \******************/
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
-eval("var express = __webpack_require__(/*! express */ \"express\");\nvar cors = __webpack_require__(/*! cors */ \"cors\"); // Import CORS middleware\nvar app = express();\nvar port = 3000;\nvar tasks = [];\napp.use(cors()); // Enable CORS for all routes\napp.use(express.json()); // Middleware to parse JSON bodies\n\napp.get(\"/tasks\", function (req, res) {\n  // Send the tasks array as a JSON response\n  res.json(tasks);\n});\napp.post(\"/tasks\", function (req, res) {\n  var jsonData = req.body; // Access the parsed JSON data\n\n  // If you want to send a response back, you can do so like this:\n  if (!jsonData || !jsonData.task) {\n    return res.status(400).send(\"Task is required\");\n  }\n\n  // Assuming the task is sent in the body as { \"task\": \"your task\" }\n  console.log(jsonData.task); // Log the data to the console\n\n  // Add the task to the tasks array\n  tasks.push(jsonData.task);\n  res.status(201).send({\n    message: \"Task added successfully\",\n    jsonData: jsonData\n  });\n});\napp[\"delete\"](\"/tasks/:task\", function (req, res) {\n  var taskToDelete = req.params.task;\n  console.log(\"taskToDelete:\", taskToDelete); // Log the task to be deleted\n  var index = tasks.indexOf(taskToDelete);\n  if (index > -1) {\n    tasks.splice(index, 1); // Remove the task from the array\n    res.status(200).send({\n      message: \"Task deleted successfully\"\n    });\n  } else {\n    res.status(404).send({\n      message: \"Task not found\"\n    });\n  }\n});\napp.listen(port, function () {\n  console.log(\"Server is running at http://localhost:\".concat(port));\n});\napp.put(\"/tasks/:task\", function (req, res) {\n  var taskToUpdate = req.params.task;\n  var newTask = req.body.task; // Assuming the new task is sent in the body\n\n  var index = tasks.indexOf(taskToUpdate);\n  if (index > -1) {\n    tasks[index] = newTask; // Update the task in the array\n    res.status(200).send({\n      message: \"Task updated successfully\",\n      task: newTask\n    });\n  } else {\n    res.status(404).send({\n      message: \"Task not found\"\n    });\n  }\n});\n\n//# sourceURL=webpack://todo-backend/./index.js?");
-
-/***/ }),
 
 /***/ "cors":
 /*!***********************!*\
@@ -25,7 +8,6 @@ eval("var express = __webpack_require__(/*! express */ \"express\");\nvar cors =
   \***********************/
 /***/ ((module) => {
 
-"use strict";
 module.exports = require("cors");
 
 /***/ }),
@@ -36,7 +18,6 @@ module.exports = require("cors");
   \**************************/
 /***/ ((module) => {
 
-"use strict";
 module.exports = require("express");
 
 /***/ })
@@ -68,11 +49,67 @@ module.exports = require("express");
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module can't be inlined because the eval devtool is used.
-/******/ 	var __webpack_exports__ = __webpack_require__("./index.js");
-/******/ 	
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+(() => {
+/*!******************!*\
+  !*** ./index.ts ***!
+  \******************/
+
+const express = __webpack_require__(/*! express */ "express");
+const cors = __webpack_require__(/*! cors */ "cors"); // Import CORS middleware
+const app = express();
+const port = 3000;
+const tasks = [];
+app.use(cors()); // Enable CORS for all routes
+app.use(express.json()); // Middleware to parse JSON bodies
+app.get("/tasks", (req, res) => {
+    // Send the tasks array as a JSON response
+    res.json(tasks);
+});
+app.post("/tasks", (req, res) => {
+    const jsonData = req.body; // Access the parsed JSON data
+    // If you want to send a response back, you can do so like this:
+    if (!jsonData || !jsonData.task) {
+        return res.status(400).send("Task is required");
+    }
+    // Assuming the task is sent in the body as { "task": "your task" }
+    console.log(jsonData.task); // Log the data to the console
+    // Add the task to the tasks array
+    tasks.push(jsonData.task);
+    res.status(201).send({ message: "Task added successfully", jsonData });
+});
+app.delete("/tasks/:task", (req, res) => {
+    const taskToDelete = req.params.task;
+    console.log("taskToDelete:", taskToDelete); // Log the task to be deleted
+    const index = tasks.indexOf(taskToDelete);
+    if (index > -1) {
+        tasks.splice(index, 1); // Remove the task from the array
+        res.status(200).send({ message: "Task deleted successfully" });
+    }
+    else {
+        res.status(404).send({ message: "Task not found" });
+    }
+});
+app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`);
+});
+app.put("/tasks/:task", (req, res) => {
+    const taskToUpdate = req.params.task;
+    const newTask = req.body.task; // Assuming the new task is sent in the body
+    const index = tasks.indexOf(taskToUpdate);
+    if (index > -1) {
+        tasks[index] = newTask; // Update the task in the array
+        res
+            .status(200)
+            .send({ message: "Task updated successfully", task: newTask });
+    }
+    else {
+        res.status(404).send({ message: "Task not found" });
+    }
+});
+
+})();
+
 /******/ })()
 ;
+//# sourceMappingURL=bundle.js.map
