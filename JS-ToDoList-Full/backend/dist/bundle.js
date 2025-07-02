@@ -15,7 +15,18 @@
   \******************/
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-eval("var express = __webpack_require__(/*! express */ \"express\");\nvar app = express();\nvar port = 3000;\nvar tasks = [];\napp.get(\"/\", function (req, res) {\n  res.send(\"sadasdasda\");\n});\napp.post(\"/tasks\", function (req, res) {\n  var task = req.body.task;\n  if (!task) {\n    return res.status(400).send(\"Task is required\");\n  }\n  tasks.push(task);\n  res.status(201).send({\n    message: \"Task added successfully\",\n    task: task\n  });\n});\napp.listen(port, function () {\n  console.log(\"Server is running at http://localhost:\".concat(port));\n});\n\n//# sourceURL=webpack://todo-backend/./index.js?");
+eval("var express = __webpack_require__(/*! express */ \"express\");\nvar cors = __webpack_require__(/*! cors */ \"cors\"); // Import CORS middleware\nvar app = express();\nvar port = 3000;\nvar tasks = [];\napp.use(cors()); // Enable CORS for all routes\napp.use(express.json()); // Middleware to parse JSON bodies\n\napp.get(\"/\", function (req, res) {\n  res.send(\"bbbbb\");\n});\napp.post(\"/tasks\", function (req, res) {\n  var jsonData = req.body; // Access the parsed JSON data\n\n  // If you want to send a response back, you can do so like this:\n  if (!jsonData || !jsonData.task) {\n    return res.status(400).send(\"Task is required\");\n  }\n\n  // Assuming the task is sent in the body as { \"task\": \"your task\" }\n  console.log(jsonData.task); // Log the data to the console\n\n  // Add the task to the tasks array\n  tasks.push(jsonData.task);\n  res.status(201).send({\n    message: \"Task added successfully\",\n    jsonData: jsonData\n  });\n});\napp.listen(port, function () {\n  console.log(\"Server is running at http://localhost:\".concat(port));\n});\n\n//# sourceURL=webpack://todo-backend/./index.js?");
+
+/***/ }),
+
+/***/ "cors":
+/*!***********************!*\
+  !*** external "cors" ***!
+  \***********************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("cors");
 
 /***/ }),
 

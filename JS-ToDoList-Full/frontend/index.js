@@ -1,3 +1,5 @@
+const baseURL = "http://localhost:3000"; // Adjust this to your backend URL if needed
+
 document.addEventListener("DOMContentLoaded", () => {
   const todoForm = document.getElementById("todo-form");
   const input = document.getElementById("todo-input");
@@ -49,6 +51,25 @@ function addItemToList(value) {
 
   const ul = document.querySelector("ul");
   ul.appendChild(li);
+
+  persistTask(value);
+}
+
+function persistTask(task) {
+  // This function can be used to send the task to a backend server or save it locally
+  console.log("Persisting task:", task);
+  // Example: Send a POST request to a server
+  fetch(`${baseURL}/tasks`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ task: task }),
+  });
+  // Note: Uncomment the above code and adjust the URL to your backend endpoint if needed.
+  // For now, we just log the task to the console.
+  // This is where you would implement the logic to save the task, e.g., to a database or local storage.
+  console.log("Task saved:", task);
 }
 
 function onDeleteClick(event) {
