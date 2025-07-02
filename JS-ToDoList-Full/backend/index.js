@@ -8,8 +8,9 @@ const tasks = [];
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Middleware to parse JSON bodies
 
-app.get("/", (req, res) => {
-  res.send("bbbbb");
+app.get("/tasks", (req, res) => {
+  // Send the tasks array as a JSON response
+  res.json(tasks);
 });
 
 app.post("/tasks", (req, res) => {

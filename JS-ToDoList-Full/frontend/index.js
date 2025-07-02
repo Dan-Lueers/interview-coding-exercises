@@ -1,4 +1,5 @@
 const baseURL = "http://localhost:3000"; // Adjust this to your backend URL if needed
+let tasks = []; // This will hold the tasks fetched from the server
 
 document.addEventListener("DOMContentLoaded", () => {
   const todoForm = document.getElementById("todo-form");
@@ -15,7 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Add button clicked");
     const value = input.value.trim();
     if (value) {
-      addItemToList(value);
+      //addItemToList(value);
+      persistTask(value);
       input.value = "";
     }
   });
@@ -30,7 +32,24 @@ document.addEventListener("DOMContentLoaded", () => {
       onItemChecked(event);
     }
   });
+
+  initialize().catch((error) => {
+    console.error("Error initializing ToDo List:", error);
+  });
 });
+
+async function initialize() {
+  console.log("Initializing ToDo List");
+  this.tasks = await getTasksFromServer();
+  addServerTasksToList(this.tasks);
+}
+
+function addServerTasksToList(tasks) {
+  console.log("Tasks added to list:", tasks);
+  tasks.forEach((task) => {
+    addItemToList(task);
+  });
+}
 
 function addItemToList(value) {
   const li = document.createElement("li");
@@ -51,25 +70,48 @@ function addItemToList(value) {
 
   const ul = document.querySelector("ul");
   ul.appendChild(li);
-
-  persistTask(value);
 }
 
-function persistTask(task) {
+async function persistTask(task) {
   // This function can be used to send the task to a backend server or save it locally
   console.log("Persisting task:", task);
   // Example: Send a POST request to a server
-  fetch(`${baseURL}/tasks`, {
+  const response = await fetch(`${baseURL}/tasks`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ task: task }),
   });
-  // Note: Uncomment the above code and adjust the URL to your backend endpoint if needed.
-  // For now, we just log the task to the console.
-  // This is where you would implement the logic to save the task, e.g., to a database or local storage.
-  console.log("Task saved:", task);
+
+  if (!response.ok) {
+    console.error("Failed to save task:", response.statusText);
+    return;
+  }
+
+  // Parse the JSON data from the response
+  const data = await response.json();
+  let newTask = data.jsonData.task;
+  addItemToList(newTask); // Add the new task to the list
+}
+
+async function getTasksFromServer() {
+  // This function can be used to fetch tasks from a backend server
+  const response = await fetch(`${baseURL}/tasks`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    console.error("Failed to fetch tasks from server:", response.statusText);
+    return;
+  }
+
+  let tasks = await response.json();
+  console.log("Tasks fetched from server:", tasks);
+  return tasks;
 }
 
 function onDeleteClick(event) {
