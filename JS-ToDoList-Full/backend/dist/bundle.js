@@ -43,7 +43,6 @@ app.post("/tasks", (req, res) => {
 });
 app.delete("/tasks/:taskid", (req, res) => {
     const taskidToDelete = req.params.taskid;
-    console.log("taskidToDelete:", taskidToDelete);
     const index = tasks.findIndex((task) => task.id === parseInt(taskidToDelete, 10));
     if (index > -1) {
         tasks.splice(index, 1); // Remove the task from the array
@@ -53,19 +52,22 @@ app.delete("/tasks/:taskid", (req, res) => {
         res.status(404).send({ message: "Task not found" });
     }
 });
-app.put("/tasks/:task", (req, res) => {
-    const taskToUpdate = req.params.task;
-    const newTask = req.body.task; // Assuming the new task is sent in the body
-    const index = tasks.indexOf(taskToUpdate);
-    if (index > -1) {
-        tasks[index] = newTask; // Update the task in the array
-        res
-            .status(200)
-            .send({ message: "Task updated successfully", task: newTask });
+app.put("/tasks/:taskid", (req, res) => {
+    const taskidToUpdate = req.params.taskid;
+    const jsonData = req.body;
+    if (!jsonData || "isChecked" in jsonData === false) {
+        return res.status(400).send("Task is required");
     }
-    else {
-        res.status(404).send({ message: "Task not found" });
+    const taskToUpdate = tasks.find((task) => {
+        return task.id === parseInt(taskidToUpdate, 10);
+    });
+    if (!taskToUpdate) {
+        return res.status(404).send({ message: "Task not found" });
     }
+    taskToUpdate.done = jsonData.isChecked; // Update the done status based on the request body
+    res
+        .status(200)
+        .send({ message: "Task updated successfully", task: taskToUpdate });
 });
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);

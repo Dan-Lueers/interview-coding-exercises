@@ -27,8 +27,9 @@ document.addEventListener("DOMContentLoaded", () => {
       event.target.tagName === "INPUT" &&
       event.target.type === "checkbox"
     ) {
-      markTaskAsDone(taskText, event);
-      // onItemChecked(event);
+      const checkbox = event.target;
+      const isChecked = checkbox.checked;
+      markTaskAsDone(taskObject, isChecked, event);
     }
   });
 
@@ -70,6 +71,7 @@ function addItemToList(task) {
 
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
+  checkbox.checked = task.done; // Set the checkbox state based on the task's done status
 
   const button = document.createElement("button");
   button.textContent = "Delete";
@@ -117,13 +119,10 @@ async function getTasksFromServer() {
   }
 
   let tasks = await response.json();
-  console.log("Tasks fetched from server:", tasks);
   return tasks;
 }
 
 async function deleteTaskFromServer(task, event) {
-  console.log("deleteTaskFromServer called with task:", task.id);
-  // This function can be used to delete a task from a backend server
   const response = await fetch(`${baseURL}/tasks/${task.id}`, {
     method: "DELETE",
     headers: {
@@ -138,18 +137,22 @@ async function deleteTaskFromServer(task, event) {
   onDeleteClick(event); // Remove the task from the UI
 }
 
-function markTaskAsDone(task, event) {
-  // This function can be used to mark a task as done
-  const response = fetch(`${baseURL}/tasks/${task}`, {
+async function markTaskAsDone(task, isChecked, event) {
+  const response = await fetch(`${baseURL}/tasks/${task.id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
+    body: JSON.stringify({ isChecked: isChecked }),
   });
+  console.log(response);
   if (!response.ok) {
     console.error("Failed to mark task as done:", response.statusText);
     return;
   }
+  // Parse the JSON data from the response
+  const data = await response.json();
+  console.log("Task marked as done:", data);
   onItemChecked(event); // Update the UI to reflect the task as done
 }      
 
