@@ -1,5 +1,5 @@
 const baseURL = "http://localhost:3000"; // Adjust this to your backend URL if needed
-let tasks = []; // This will hold the tasks fetched from the server
+const tasks = []; // This will hold the tasks fetched from the server
 
 document.addEventListener("DOMContentLoaded", () => {
   const todoForm = document.getElementById("todo-form");
@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const todoList = document.querySelector("ul");
 
   todoForm.addEventListener("submit", (event) => {
-    event.preventDefault(); // Prevent form submission
+    event.preventDefault();
   });
 
   addButton.addEventListener("click", () => {
@@ -20,9 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   todoList.addEventListener("click", (event) => {
-    const taskText = getClosestSpanSibling(event.target);
+    const taskObject = getClosestSpanSibling(event.target);
     if (event.target.tagName === "BUTTON") {
-      deleteTaskFromServer(taskText, event);
+      deleteTaskFromServer(taskObject, event);
     } else if (
       event.target.tagName === "INPUT" &&
       event.target.type === "checkbox"
@@ -38,13 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function initialize() {
-  console.log("Initializing ToDo List");
   this.tasks = await getTasksFromServer();
   addServerTasksToList(this.tasks);
 }
 
 function addServerTasksToList(tasks) {
-  console.log("Tasks added to list:", tasks);
   tasks.forEach((task) => {
     addItemToList(task);
   });
@@ -53,10 +51,13 @@ function addServerTasksToList(tasks) {
 function getClosestSpanSibling(element) {
   // Find the closest span element that contains the task text
   const taskSpan = element.closest("span").querySelector("span");
-
-  // Get the text content of the task span
   const taskText = taskSpan.textContent;
-  return taskText;
+  const taskId = taskSpan.id;
+  return {
+    name: taskText,
+    id: taskId, // Use the ID from the inner span
+    done: taskSpan.style.textDecoration === "line-through", // Check if the task is marked as done
+  };
 }
 
 function addItemToList(task) {
@@ -83,9 +84,6 @@ function addItemToList(task) {
 }
 
 async function persistTask(task) {
-  // This function can be used to send the task to a backend server or save it locally
-  console.log("Persisting task:", task);
-  // Example: Send a POST request to a server
   const response = await fetch(`${baseURL}/tasks`, {
     method: "POST",
     headers: {
@@ -101,8 +99,6 @@ async function persistTask(task) {
 
   // Parse the JSON data from the response
   const data = await response.json();
-  console.log("Task saved successfully:", data.task);
-
   addItemToList(data.task); // Add the new task to the list
 }
 
@@ -126,8 +122,9 @@ async function getTasksFromServer() {
 }
 
 async function deleteTaskFromServer(task, event) {
+  console.log("deleteTaskFromServer called with task:", task.id);
   // This function can be used to delete a task from a backend server
-  const response = await fetch(`${baseURL}/tasks/${task}`, {
+  const response = await fetch(`${baseURL}/tasks/${task.id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

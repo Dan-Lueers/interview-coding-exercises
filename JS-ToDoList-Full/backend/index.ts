@@ -42,10 +42,12 @@ app.post("/tasks", (req, res) => {
   res.status(201).send({ message: "Task added successfully", task });
 });
 
-app.delete("/tasks/:task", (req, res) => {
-  const taskToDelete = req.params.task;
-  console.log("taskToDelete:", taskToDelete); // Log the task to be deleted
-  const index = tasks.indexOf(taskToDelete);
+app.delete("/tasks/:taskid", (req, res) => {
+  const taskidToDelete = req.params.taskid;
+  console.log("taskidToDelete:", taskidToDelete);
+  const index = tasks.findIndex(
+    (task) => task.id === parseInt(taskidToDelete, 10)
+  );
   if (index > -1) {
     tasks.splice(index, 1); // Remove the task from the array
     res.status(200).send({ message: "Task deleted successfully" });
