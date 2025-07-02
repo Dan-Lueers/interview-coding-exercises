@@ -1,6 +1,3 @@
-console.log("dkasl;dkal;s");
-
-
 function onAddClick() {
   // get value from input
   const input = document.getElementById("input-item");
