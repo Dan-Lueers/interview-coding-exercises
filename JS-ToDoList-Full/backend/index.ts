@@ -1,15 +1,16 @@
-const express = require("express");
-const cors = require("cors"); // Import CORS middleware
+import express, { Request, Response } from "express";
+
+import cors from "cors"; // Import CORS middleware
 const app = express();
 const port = 3000;
 
 const tasks: Task[] = [];
 
-type Task = {
+interface Task {
   name: string;
   done: boolean;
   id: number;
-};
+}
 
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Middleware to parse JSON bodies
@@ -31,9 +32,14 @@ app.post("/tasks", (req, res) => {
   console.log(jsonData.task); // Log the data to the console
 
   // Add the task to the tasks array
-  tasks.push(jsonData.task);
+  const task: Task = {
+    name: jsonData.task,
+    done: false, // Default value for done
+    id: Date.now() + Math.floor(Math.random() * 1000), // Generate a more unique ID
+  };
+  tasks.push(task);
 
-  res.status(201).send({ message: "Task added successfully", jsonData });
+  res.status(201).send({ message: "Task added successfully", task });
 });
 
 app.delete("/tasks/:task", (req, res) => {
@@ -46,10 +52,6 @@ app.delete("/tasks/:task", (req, res) => {
   } else {
     res.status(404).send({ message: "Task not found" });
   }
-});
-
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
 });
 
 app.put("/tasks/:task", (req, res) => {
@@ -65,4 +67,8 @@ app.put("/tasks/:task", (req, res) => {
   } else {
     res.status(404).send({ message: "Task not found" });
   }
+});
+
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
 });

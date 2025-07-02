@@ -9,11 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   todoForm.addEventListener("submit", (event) => {
     event.preventDefault(); // Prevent form submission
-    console.log("Form submitted");
   });
 
   addButton.addEventListener("click", () => {
-    console.log("Add button clicked");
     const value = input.value.trim();
     if (value) {
       persistTask(value);
@@ -61,11 +59,13 @@ function getClosestSpanSibling(element) {
   return taskText;
 }
 
-function addItemToList(value) {
+function addItemToList(task) {
   const li = document.createElement("li");
   const outerSpan = document.createElement("span");
   const innerSpan = document.createElement("span");
-  innerSpan.textContent = value;
+  innerSpan.textContent = task.name;
+  innerSpan.id = task.id; // Set the ID for the task
+  innerSpan.style.textDecoration = task.done ? "line-through" : "none"; // Mark as done if applicable
 
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
@@ -101,8 +101,9 @@ async function persistTask(task) {
 
   // Parse the JSON data from the response
   const data = await response.json();
-  let newTask = data.jsonData.task;
-  addItemToList(newTask); // Add the new task to the list
+  console.log("Task saved successfully:", data.task);
+
+  addItemToList(data.task); // Add the new task to the list
 }
 
 async function getTasksFromServer() {
