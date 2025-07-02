@@ -45,3 +45,18 @@ app.delete("/tasks/:task", (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
+
+app.put("/tasks/:task", (req, res) => {
+  const taskToUpdate = req.params.task;
+  const newTask = req.body.task; // Assuming the new task is sent in the body
+
+  const index = tasks.indexOf(taskToUpdate);
+  if (index > -1) {
+    tasks[index] = newTask; // Update the task in the array
+    res
+      .status(200)
+      .send({ message: "Task updated successfully", task: newTask });
+  } else {
+    res.status(404).send({ message: "Task not found" });
+  }
+});

@@ -7,30 +7,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const addButton = document.getElementById("add-button");
   const todoList = document.querySelector("ul");
 
-  //   todoForm.addEventListener("submit", (event) => {
-  //     event.preventDefault(); // Prevent form submission
-  //     console.log("Form submitted");
-  //   });
+  todoForm.addEventListener("submit", (event) => {
+    event.preventDefault(); // Prevent form submission
+    console.log("Form submitted");
+  });
 
   addButton.addEventListener("click", () => {
     console.log("Add button clicked");
     const value = input.value.trim();
     if (value) {
-      //addItemToList(value);
       persistTask(value);
       input.value = "";
     }
   });
 
   todoList.addEventListener("click", (event) => {
+    const taskText = getClosestSpanSibling(event.target);
     if (event.target.tagName === "BUTTON") {
-      const taskText = getClosestSpanSibling(event.target);
       deleteTaskFromServer(taskText, event);
     } else if (
       event.target.tagName === "INPUT" &&
       event.target.type === "checkbox"
     ) {
-      onItemChecked(event);
+      markTaskAsDone(taskText, event);
+      // onItemChecked(event);
     }
   });
 
@@ -149,6 +149,22 @@ async function deleteTaskFromServer(task, event) {
   }
   onDeleteClick(event); // Remove the task from the UI
 }
+
+function markTaskAsDone(task, event) {
+  // This function can be used to mark a task as done
+  const response = fetch(`${baseURL}/tasks/${task}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    console.error("Failed to mark task as done:", response.statusText);
+    return;
+  }
+  onItemChecked(event); // Update the UI to reflect the task as done
+}      
+
 
 function onDeleteClick(event) {
   const button = event.target;
