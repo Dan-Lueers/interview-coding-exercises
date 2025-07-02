@@ -5,15 +5,32 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>JS-ToDo List Full</title>
         <script src="index.js" defer></script>
+        <style src="styles.css"></style>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="apple-touch-icon" href="favicon.ico">
+        <link rel="apple-touch-icon-precomposed" href="favicon.ico">
+        <meta name="description" content="A simple To-Do list application built with JavaScript, HTML, and CSS. Add, delete, and mark tasks as done.">
+        <meta name="keywords" content="To-Do List, JavaScript, HTML, CSS, Task Management, Web Application">
+        <meta name="author" content="Your Name">
+        <meta name="theme-color" content="#ffffff">
+        <meta property="og:title" content="JS-ToDo List Full">
+        <meta property="og:description" content="A simple To-Do list application built with JavaScript, HTML, and CSS. Add, delete, and mark tasks as done.">
+        <meta property="og:image" content="favicon.ico">
+        <style src="styles.css"></style>
+        <meta property="og:type" content="website">         
     </head>
     <body>
-        <h1>JS-ToDo List Full</h1>
-        <form id="todo-form">
-            <input type="text" id="todo-input" placeholder="Add a new task" >
-            <button type="button" id="add-button">Add Task</button>
-        </form>
-        <ul id="todo-list">
-            
-        </ul>
+        <div class="container">
+            <h1 class="title">JS-ToDo List Full</h1>
+            <form id="todo-form" class="todo-form">
+                <input type="text" id="todo-input" class="todo-input" placeholder="Add a new task">
+                <button type="button" id="add-button" class="add-button">Add Task</button>
+            </form>
+            <ul id="todo-list" class="todo-list">
+                <!-- Tasks will be rendered here -->
+            </ul>
+        </div>
     </body>
 </html>
